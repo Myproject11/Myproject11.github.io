@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Rating</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('./Abstract Geometric Patterns.png') no-repeat center center fixed;
+            background-size: cover;
+            perspective: 1000px;
+        }
+        .rating-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            width: 450px;
+            transform: rotateY(0deg);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        .rating-container:hover {
+            transform: rotateY(10deg);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+        }
+        .rating-container h1 {
+            margin-bottom: 20px;
+            color: #222;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .rating-form label {
+            display: block;
+            margin: 15px 0 8px;
+            font-weight: bold;
+        }
+        .rating-form input[type="text"], .rating-form input[type="number"], .rating-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .rating-form input:focus, .rating-form textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+        }
+        .rating-form button {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .rating-form button:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+        .emoji-picker {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .emoji-picker span {
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .emoji-picker span:hover {
+            transform: scale(1.3);
+        }
+        .ratings {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .ratings h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .ratings p {
+            padding: 12px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .ratings p:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="rating-container">
+    <h1>Rate This Website</h1>
+    <form class="rating-form" onsubmit="sendFeedback(event)">
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" placeholder="Enter your name" required>
+
+        <label for="rating">Your Rating (1-5):</label>
+        <input type="number" id="rating" min="1" max="5" placeholder="Enter a rating" required>
+
+        <label for="comments">Your Comments:</label>
+        <textarea id="comments" rows="4" placeholder="Enter your comments" required></textarea>
+
+        <label for="emoji">Choose an Emoji:</label>
+        <div class="emoji-picker" id="emoji-picker">
+            <span onclick="addEmoji('😀')">😀</span>
+            <span onclick="addEmoji('😅')">😅</span>
+            <span onclick="addEmoji('😍')">😍</span>
+            <span onclick="addEmoji('🤔')">🤔</span>
+            <span onclick="addEmoji('🙁')">🙁</span>
+        </div>
+
+        <button type="submit">Submit Feedback</button>
+    </form>
+
+    <div class="ratings" id="ratings">
+        <h2>Feedback:</h2>
+    </div>
+</div>
+
+<script>
+    const ratingsContainer = document.getElementById('ratings');
+
+    function addEmoji(emoji) {
+        const comments = document.getElementById('comments');
+        comments.value += emoji;
+    }
+
+    function sendFeedback(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const rating = document.getElementById('rating').value;
+        const comments = document.getElementById('comments').value;
+
+        if (name && rating && comments) {
+            const feedbackElement = document.createElement('p');
+            feedbackElement.textContent = name + ' rated this website ' + rating + '/5 and commented: "' + comments + '"';
+            ratingsContainer.appendChild(feedbackElement);
+
+            // Prepare email data
+            const emailData = {
+                to: 'sai474225@gmail.com',
+                subject: 'New Website Feedback',
+                body: 'Name: ' + name + '\nRating: ' + rating + '/5\nComments: ' + comments
+            };
+
+            // Use Email API to send the email
+            fetch('https://formsubmit.co/ajax/sai474225@gmail.com', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: emailData.subject,
+                    message: emailData.body
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Feedback submitted and email sent successfully!');
+                } else {
+                    alert('There was an error sending the email.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again later.');
+            });
+
+            // Clear the form fields
+            document.getElementById('name').value = '';
+            document.getElementById('rating').value = '';
+            document.getElementById('comments').value = '';
+        } else {
+            alert('Please fill in all fields before submitting!');
+        }
+    }
+</script>
+
+</body>
+</html>
