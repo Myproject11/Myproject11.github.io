@@ -13,7 +13,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: url('./Abstract%20Geometric%20Patterns.png') no-repeat center center fixed;
+            background: url('./Abstract Geometric Patterns.png') no-repeat center center fixed;
             background-size: cover;
             perspective: 1000px;
         }
@@ -137,6 +137,7 @@
 
 <script>
     const ratingsContainer = document.getElementById('ratings');
+    const emailRecipient = 'sai474225@gmail.com'; // Your email address stored in a variable
 
     function addEmoji(emoji) {
         const comments = document.getElementById('comments');
@@ -157,13 +158,13 @@
 
             // Prepare email data
             const emailData = {
-                to: 'sai474225@gmail.com',
+                to: emailRecipient,
                 subject: 'New Website Feedback',
                 body: 'Name: ' + name + '\nRating: ' + rating + '/5\nComments: ' + comments
             };
 
             // Use Email API to send the email
-            fetch('https://formsubmit.co/ajax/sai474225@gmail.com', {
+            fetch('https://formsubmit.co/ajax/' + encodeURIComponent(emailRecipient), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
