@@ -174,11 +174,12 @@
                     message: emailData.body
                 })
             })
-            .then(response => {
-                if (response.ok) {
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
                     alert('Feedback submitted and email sent successfully!');
                 } else {
-                    alert('There was an error sending the email.');
+                    alert('There was an error sending the email: ' + data.message);
                 }
             })
             .catch(error => {
