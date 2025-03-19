@@ -31,17 +31,12 @@
             transform: rotateY(10deg);
             box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
         }
-        .rating-container h1 {
-            margin-bottom: 20px;
-            color: #222;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
         .rating-form label {
             display: block;
             margin: 15px 0 8px;
             font-weight: bold;
         }
-        .rating-form input[type="text"], .rating-form input[type="number"], .rating-form textarea {
+        .rating-form input, .rating-form textarea {
             width: 100%;
             padding: 12px;
             margin-bottom: 20px;
@@ -85,23 +80,6 @@
             margin-top: 30px;
             text-align: left;
         }
-        .ratings h2 {
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .ratings p {
-            padding: 12px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            margin: 10px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-        .ratings p:hover {
-            transform: translateX(10px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
     </style>
 </head>
 <body>
@@ -136,12 +114,8 @@
 </div>
 
 <script>
-    const ratingsContainer = document.getElementById('ratings');
-    const emailRecipient = atob('c2FpNDc0MjI1QGdtYWlsLmNvbQ=='); // Base64 encoded email address
-
     function addEmoji(emoji) {
-        const comments = document.getElementById('comments');
-        comments.value += emoji;
+        document.getElementById('comments').value += emoji;
     }
 
     function sendFeedback(event) {
@@ -150,28 +124,21 @@
         const name = document.getElementById('name').value;
         const rating = document.getElementById('rating').value;
         const comments = document.getElementById('comments').value;
+        const ratingsContainer = document.getElementById('ratings');
 
         if (name && rating && comments) {
             const feedbackElement = document.createElement('p');
-            feedbackElement.textContent = name + ' rated this website ' + rating + '/5 and commented: "' + comments + '"';
+            feedbackElement.textContent = `${name} rated this website ${rating}/5 and commented: "${comments}"`;
             ratingsContainer.appendChild(feedbackElement);
 
-            // Prepare email data
-            const emailData = {
-                to: emailRecipient,
-                subject: 'New Website Feedback',
-                body: 'Name: ' + name + '\nRating: ' + rating + '/5\nComments: ' + comments
-            };
-
-            // Use Email API to send the email
-            fetch('https://formsubmit.co/ajax/' + encodeURIComponent(emailRecipient), {
+            // Sending feedback via FormSubmit API
+            fetch('https://formsubmit.co/ajax/YOUR_EMAIL_HERE', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    name: emailData.subject,
-                    message: emailData.body
+                    name: name,
+                    email: "no-reply@website.com",
+                    message: `Rating: ${rating}/5\nComments: ${comments}`
                 })
             })
             .then(response => response.json())
@@ -179,7 +146,7 @@
                 if (data.success) {
                     alert('Feedback submitted and email sent successfully!');
                 } else {
-                    alert('There was an error sending the email: ' + data.message);
+                    alert('There was an error sending the email.');
                 }
             })
             .catch(error => {
@@ -187,7 +154,7 @@
                 alert('An error occurred. Please try again later.');
             });
 
-            // Clear the form fields
+            // Clear form fields
             document.getElementById('name').value = '';
             document.getElementById('rating').value = '';
             document.getElementById('comments').value = '';
